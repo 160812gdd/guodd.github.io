@@ -1,0 +1,905 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/1.png">
+  <link rel="icon" href="/img/1.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="guodd012">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="达梦数据库（DSC集群）">
+<meta property="og:type" content="article">
+<meta property="og:title" content="达梦数据库DSC集群安装">
+<meta property="og:url" content="https://guodd012.github.io/2024/01/15/%E8%BE%BE%E6%A2%A6%E6%95%B0%E6%8D%AE%E5%BA%93DSC%E9%9B%86%E7%BE%A4%E5%AE%89%E8%A3%85/index.html">
+<meta property="og:site_name" content="Guodd">
+<meta property="og:description" content="达梦数据库（DSC集群）">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://raw.githubusercontent.com/guodd012/typora-user-images/main/imgimage-20230305092424097.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/guodd012/typora-user-images/main/imgimage-20230305102901135.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/guodd012/typora-user-images/main/imgimage-20230305102927313.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/guodd012/typora-user-images/main/imgimage-20230305110432584.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/guodd012/typora-user-images/main/imgimage-20230306154024755.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/guodd012/typora-user-images/main/imgimage-20230306160513842.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/guodd012/typora-user-images/main/imgimage-20230306163208784.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/guodd012/typora-user-images/main/imgimage-20230306163224477.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/guodd012/typora-user-images/main/imgimage-20230324090231575.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/guodd012/typora-user-images/main/imgimage-20230324090255802.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/guodd012/typora-user-images/main/imgimage-20230306164507780.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/guodd012/typora-user-images/main/imgimage-20230326152554504.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/guodd012/typora-user-images/main/imgimage-20230306165457118.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/guodd012/typora-user-images/main/imgimage-20230326152714464.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/guodd012/typora-user-images/main/imgimage-20230326153200899.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/guodd012/typora-user-images/main/imgimage-20230326154034073.png">
+<meta property="article:published_time" content="2024-01-15T01:53:38.000Z">
+<meta property="article:modified_time" content="2024-01-15T02:00:42.659Z">
+<meta property="article:author" content="guodd012">
+<meta property="article:tag" content="Linux">
+<meta property="article:tag" content="达梦数据库">
+<meta property="article:tag" content="dmdbms">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/guodd012/typora-user-images/main/imgimage-20230305092424097.png">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>达梦数据库DSC集群安装 - Guodd</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"guodd012.github.io","root":"/","version":"1.9.7","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 7.0.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Guodd012</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/background-image.jpg') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="达梦数据库DSC集群安装"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2024-01-15 09:53" pubdate>
+          2024年1月15日 上午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          3.1k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          26 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">达梦数据库DSC集群安装</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="达梦数据库（DSC集群）"><a href="#达梦数据库（DSC集群）" class="headerlink" title="达梦数据库（DSC集群）"></a>达梦数据库（DSC集群）</h1><span id="more"></span>
+
+<h2 id="1-DSC集群简述"><a href="#1-DSC集群简述" class="headerlink" title="1. DSC集群简述"></a>1. DSC集群简述</h2><p>DMDSC 集群是一个多实例、单数据库的系统。多个数据库实例可以同时访问、修改同 一个数据库的数据。用户可以登录集群中的任意一个数据库实例，获得完整的数据库服务。 数据文件、控制文件在集群系统中只有一份，不论有几个节点，这些节点都平等地使用这些 文件，这些文件保存在共享存储上。每个节点有自己独立的联机日志和归档日志，其中联机 日志保存在共享存储上，归档日志可以保存在本地存储上也可以保存在共享存储上。</p>
+<p>DMDSC 集群得以实现的重要基础就是共享存储。DM 支持的共享存储有两种:裸设备和 DMASM。这两种存储的区别在于后者在前者的基础上，部署并使用了 DMASM 文件系统。为 了方便对裸设备上的磁盘或文件进行管理，推荐使用DMASM文件系统管理裸设备。</p>
+<p>DMDSC 集群主要由数据库和数据库实例、共享存储、本地存储、通信网络、以及集群 控制软件 DMCSS 组成。下面以部署了 DMASM 的 DMDSC 集群为例，展示 DMDSC 集群系统结构</p>
+<img src="https://raw.githubusercontent.com/guodd012/typora-user-images/main/imgimage-20230305092424097.png" srcset="/img/loading.gif" lazyload alt="image-20230305092424097" style="zoom:50%;" />
+
+<h2 id="2-DMCSS介绍"><a href="#2-DMCSS介绍" class="headerlink" title="2. DMCSS介绍"></a>2. DMCSS介绍</h2><p>DMCSS(Dameng Cluster Synchronization Services)达梦集群同步服务， 使用 DMASM 集群或 DMDSC 集群都必须要配置 DMCSS 服务。在 DMASM 集群或 DMDSC 集群 中，每个节点都需要配置一个 DMCSS 服务。这些 DMCSS 服务自身也构成一个集群，DMCSS 集群中负责监控、管理整个 DMASM 集群和 DMDSC 集群的节点称为控制节点(control node)，其他 DMCSS 节点称为普通节点(normal node)。DMCSS 普通节点不参与 DMASM 集群和 DMDSC 集群管理，当 DMCSS 控制节点故障时，会从活动的普通节点中重新选取一个 DMCSS 控制节点。</p>
+<h2 id="3-DMASM-介绍"><a href="#3-DMASM-介绍" class="headerlink" title="3. DMASM 介绍"></a>3. DMASM 介绍</h2><p>DMASM(DM Auto Storage Manager)DM 自动存储管理器，是一个专用的分布式 文件系统，使用 DMASM 自动存储管理方案，可以帮助用户更加便捷地管理 DMDSC 集群的数 据库文件。DMASM 的主要部件包括:提供存储服务的裸设备、dmasmsvr 服务器、dmasmapi 接口、初始化工具 dmasmcmd 和管理工具 dmasmtool 等。</p>
+<p>DMDSC 集群可以直接使用裸设备作为共享存储，存放数据库文件。但是，由于裸设备 存在的一些功能限制，造成 DMDSC 集群在使用、维护上并不是那么灵活、方便。为了克服裸设备的这些使用限制，DM 专门设计了一个分布式文件系统 DMASM，来管理 裸设备的磁盘和文件。DMASM 提供了基本的数据文件访问接口，可以有效降低 DMDSC 共享 存储的维护难度。</p>
+<h2 id="4-DMDSC集群搭建"><a href="#4-DMDSC集群搭建" class="headerlink" title="4. DMDSC集群搭建"></a>4. DMDSC集群搭建</h2><h3 id="4-1-环境准备"><a href="#4-1-环境准备" class="headerlink" title="4.1 环境准备"></a>4.1 环境准备</h3><p>硬件：两台机器配置相同，2G内存，100G本地磁盘，2块网卡，另有一块100G共享磁盘。</p>
+<p>操作系统：Debian 11（本次演示使用Debian系统，主流操作系统均兼容，信创专用操作系统除外）</p>
+<p>DM工具位于: <code>  /opt/dmdbms/bin/</code></p>
+<p>配置文件位于： <code>/opt/dmdbms/config</code></p>
+<p>两台机器安装达梦数据库单机版，安装过程参考 <code>浪潮Gs Cloud安装部署步骤 &gt; 4.2.2 命令行安装  </code> 。无需初始化数据库实例</p>
+<p>两台机器关闭防火墙和selinux。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs shell">systemctl --now disable firewalld.ervice<br>getenforce<br>setenforce 0 #临时关闭selinux   <br>vi /etc/selinux/config  #永久关闭selinux   <br><span class="hljs-meta prompt_"># </span><span class="language-bash">进入文件后修改 SELINUX = disabled</span><br><span class="hljs-meta prompt_"># </span><span class="language-bash">保存退出文件</span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">重启生效</span><br></code></pre></td></tr></table></figure>
+
+<blockquote>
+<p>注： 生产环境不建议关闭防火墙，需要根据搭建时使用的端口调整防火墙策略。</p>
+</blockquote>
+<h3 id="4-2-搭建两节点DSC集群"><a href="#4-2-搭建两节点DSC集群" class="headerlink" title="4.2 搭建两节点DSC集群"></a>4.2 搭建两节点DSC集群</h3><h4 id="4-2-1-磁盘分区"><a href="#4-2-1-磁盘分区" class="headerlink" title="4.2.1 磁盘分区"></a>4.2.1 磁盘分区</h4><p>在DSC1机器上进行磁盘分区</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs shell">root@DMDSC1:~# lsblk <br>NAME   MAJ:MIN RM  SIZE RO TYPE MOUNTPOINT<br>sda      8:0    0  100G  0 disk <br>└─sda1   8:1    0  100G  0 part /<br>sdb      8:16   0  100G  0 disk  # 新添加的共享磁盘<br>sr0     11:0    1 1024M  0 rom  <br></code></pre></td></tr></table></figure>
+
+<p>开始分区：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">fdisk /dev/sdb<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs shell">n → p → 1 → “回车” →+5G            # dcr<br>n → p → 2 → “回车” → +5G           # vote<br>n → p → 3 → “回车” → +30G          # log0<br>n → p → 4 → “回车” → 回车          # data0<br>w     #保存<br></code></pre></td></tr></table></figure>
+
+<p><img src="https://raw.githubusercontent.com/guodd012/typora-user-images/main/imgimage-20230305102901135.png" srcset="/img/loading.gif" lazyload alt="image-20230305102901135"></p>
+<p>另外一台机器<code>lsblk</code>查看硬盘分区，如没有看到分区则<code>reboot</code>重启机器</p>
+<p><img src="https://raw.githubusercontent.com/guodd012/typora-user-images/main/imgimage-20230305102927313.png" srcset="/img/loading.gif" lazyload alt="image-20230305102926793"></p>
+<p><img src="https://raw.githubusercontent.com/guodd012/typora-user-images/main/imgimage-20230305110432584.png" srcset="/img/loading.gif" lazyload></p>
+<h4 id="4-2-2-绑定裸设备（DSC1、DSC2两节点都需要进行如下操作）"><a href="#4-2-2-绑定裸设备（DSC1、DSC2两节点都需要进行如下操作）" class="headerlink" title="4.2.2 绑定裸设备（DSC1、DSC2两节点都需要进行如下操作）:"></a>4.2.2 绑定裸设备（DSC1、DSC2两节点都需要进行如下操作）:</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs shell">vim /etc/udev/rules.d/80-raw.rules<br><span class="hljs-meta prompt_"> </span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">添加以下内容</span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">由于有些机器重启后硬盘标识会变，所以推荐使用硬盘的UUID挂载</span><br><br>ACTION==&quot;add&quot;,KERNEL==&quot;sdb1&quot;,RUN+=&quot;/bin/raw /dev/raw/raw1 %N&quot;<br>ACTION==&quot;add&quot;,KERNEL==&quot;sdb2&quot;,RUN+=&quot;/bin/raw /dev/raw/raw2 %N&quot;<br>ACTION==&quot;add&quot;,KERNEL==&quot;sdb3&quot;,RUN+=&quot;/bin/raw /dev/raw/raw3 %N&quot;<br>ACTION==&quot;add&quot;,KERNEL==&quot;sdb4&quot;,RUN+=&quot;/bin/raw /dev/raw/raw4 %N&quot;<br>KERNEL==&quot;raw[1-4]&quot;, OWNER=&quot;dmdba&quot;, GROUP=&quot;dinstall&quot;, MODE=&quot;660&quot;<br><br></code></pre></td></tr></table></figure>
+
+<p>使裸设备生效（各系统绑定裸设备的命令不同，需要根据实际环境操作）：</p>
+<p>Centos和Redhat系统：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">start_udev<br></code></pre></td></tr></table></figure>
+
+<p>Debian和Ubuntu系统：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs shell">partprobe /dev/sdb<br>udevadm control --reload-rules<br>udevadm trigger --type=devices --action=change<br>systemctl restart systemd-udev-trigger.service<br><br>编辑/etc/rc.local文件，开机自动执行绑定裸设备操作<br>/usr/sbin/raw /dev/raw/raw1 /dev/sdb1<br>/usr/sbin/raw /dev/raw/raw2 /dev/sdb2<br>/usr/sbin/raw /dev/raw/raw3 /dev/sdb3<br>/usr/sbin/raw /dev/raw/raw4 /dev/sdb4<br></code></pre></td></tr></table></figure>
+
+<p>如果没有 <code>partprobe</code> 命令，使用以下命令安装  </p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs shell">Debian安装partprobe命令<br>apt-get -y install parted <br><br>CentOS安装partprobe命令<br>yum -y install parted<br></code></pre></td></tr></table></figure>
+
+<p>查看：<code>ll /dev/raw/</code></p>
+<p><img src="https://raw.githubusercontent.com/guodd012/typora-user-images/main/imgimage-20230306154024755.png" srcset="/img/loading.gif" lazyload alt="image-20230306154024755"></p>
+<h4 id="4-2-3-创建-dmdcr-cfg-ini-配置文件，DSC1、DSC2两节点都要-配置文件都位于-opt-dmdbms-config"><a href="#4-2-3-创建-dmdcr-cfg-ini-配置文件，DSC1、DSC2两节点都要-配置文件都位于-opt-dmdbms-config" class="headerlink" title="4.2.3 创建 dmdcr_cfg.ini 配置文件，DSC1、DSC2两节点都要(配置文件都位于/opt/dmdbms/config)"></a>4.2.3 创建 <code>dmdcr_cfg.ini</code> 配置文件，DSC1、DSC2两节点都要(配置文件都位于<code>/opt/dmdbms/config</code>)</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs shell">su dmdba<br>mkdir /opt/dmdbms/config<br>vi /opt/dmdbms/config/dmdcr_cfg.ini<br></code></pre></td></tr></table></figure>
+
+<p><code>dmdcr_cfg.ini</code>是格式化<code>DCR</code>和<code>Voting Disk</code>的配置文件。配置信息包括三类: 集群环境全局信息、集群组信息、以及组内节点信息。</p>
+<p>具体配置如下：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><code class="hljs shell">DCR_N_GRP = 3 #集群环境包括多少个 group，取值范围 1~16<br>DCR_VTD_PATH = /dev/raw/raw2 #Voting Disk 路径<br>DCR_OGUID = 63635 #消息标识，dmcssm 登录 dmcss 消息校验用<br>[GRP]<br>DCR_GRP_TYPE = CSS #组类型<br>DCR_GRP_NAME = GRP_CSS #组名<br>DCR_GRP_N_EP = 2 #组内节点个数 N<br>DCR_GRP_DSKCHK_CNT = 60 #磁盘心跳机制，容错时间，单位秒，缺省 60S，取值范围 5~600<br>[GRP_CSS]<br>DCR_EP_NAME = CSS0<br>DCR_EP_HOST = 192.168.1.35 #节点IP(CSS/ASM 有效)对DB来说，是绑定 VIP 的网卡对应的物理 IP 地址 心跳IP<br>DCR_EP_PORT = 9341<br>[GRP_CSS]<br>DCR_EP_NAME = CSS1<br>DCR_EP_HOST = 192.168.1.36<br>DCR_EP_PORT = 9343<br>[GRP]<br>DCR_GRP_TYPE = ASM<br>DCR_GRP_NAME = GRP_ASM<br>DCR_GRP_N_EP = 2<br>DCR_GRP_DSKCHK_CNT = 60<br>[GRP_ASM]<br>DCR_EP_NAME = ASM0 #ASM 的节点名必须和dmasvrmal.ini里的 MAL_INST_NAME 一致<br>DCR_EP_SHM_KEY = 93360<br>DCR_EP_SHM_SIZE = 10<br>DCR_EP_HOST = 192.168.1.35<br>DCR_EP_PORT = 9349<br>DCR_EP_ASM_LOAD_PATH = /dev/raw<br>[GRP_ASM]<br>DCR_EP_NAME = ASM1<br>DCR_EP_SHM_KEY = 93361<br>DCR_EP_SHM_SIZE = 10<br>DCR_EP_HOST = 192.168.1.36<br>DCR_EP_PORT = 9351<br>DCR_EP_ASM_LOAD_PATH = /dev/raw<br>[GRP]<br>DCR_GRP_TYPE = DB<br>DCR_GRP_NAME = GRP_DSC<br>DCR_GRP_N_EP = 2<br>DCR_GRP_DSKCHK_CNT = 60<br>[GRP_DSC]<br>DCR_EP_NAME = DSC0<br>DCR_EP_SEQNO = 0<br>DCR_EP_PORT = 5236<br>DCR_CHECK_PORT = 9741<br>[GRP_DSC]<br>DCR_EP_NAME = DSC1<br>DCR_EP_SEQNO = 1<br>DCR_EP_PORT = 5236<br>DCR_CHECK_PORT = 9742<br><br></code></pre></td></tr></table></figure>
+
+<h4 id="4-2-4-创建ASM磁盘（其中一台执行）"><a href="#4-2-4-创建ASM磁盘（其中一台执行）" class="headerlink" title="4.2.4 创建ASM磁盘（其中一台执行）"></a>4.2.4 创建ASM磁盘（其中一台执行）</h4><p>到达梦数据库的<code>bin</code>目录下：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs shell">./dmasmcmd<br>create dcrdisk &#x27;/dev/raw/raw1&#x27; &#x27;dcr&#x27;<br>create votedisk &#x27;/dev/raw/raw2&#x27; &#x27;vote&#x27;<br>create asmdisk &#x27;/dev/raw/raw3&#x27; &#x27;LOG&#x27;<br>create asmdisk &#x27;/dev/raw/raw4&#x27; &#x27;DATA&#x27;<br>init dcrdisk &#x27;/dev/raw/raw1&#x27; from &#x27;/opt/dmdbms/config/dmdcr_cfg.ini&#x27; identified by &#x27;123456&#x27;<br>init votedisk &#x27;/dev/raw/raw2&#x27; from &#x27;/opt/dmdbms/config/dmdcr_cfg.ini&#x27;<br></code></pre></td></tr></table></figure>
+
+<p><img src="https://raw.githubusercontent.com/guodd012/typora-user-images/main/imgimage-20230306160513842.png" srcset="/img/loading.gif" lazyload alt="image-20230306160513842"></p>
+<h4 id="4-2-5-配置ASM的MAL文件-DSC1、DSC2都要配置"><a href="#4-2-5-配置ASM的MAL文件-DSC1、DSC2都要配置" class="headerlink" title="4.2.5 配置ASM的MAL文件(DSC1、DSC2都要配置)"></a>4.2.5 配置ASM的MAL文件(DSC1、DSC2都要配置)</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">vi /opt/dmdbms/config/dmasvrmal.ini<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs shell">[MAL_INST1]<br>  MAL_INST_NAME        = ASM0<br>  MAL_HOST             = 192.168.1.35<br>  MAL_PORT             = 7236<br>[MAL_INST2]<br>  MAL_INST_NAME        = ASM1<br>  MAL_HOST             = 192.168.1.36<br>  MAL_PORT             = 7237<br></code></pre></td></tr></table></figure>
+
+<h4 id="4-2-6-配置dmdcr-ini文件（DSC1、DSC2都要）"><a href="#4-2-6-配置dmdcr-ini文件（DSC1、DSC2都要）" class="headerlink" title="4.2.6 配置dmdcr.ini文件（DSC1、DSC2都要）"></a>4.2.6 配置dmdcr.ini文件（DSC1、DSC2都要）</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">vi /opt/dmdbms/config/dmdcr.ini<br></code></pre></td></tr></table></figure>
+
+<p>DSC1:</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs shell">DMDCR_PATH     = /dev/raw/raw1<br>DMDCR_MAL_PATH = /opt/dmdbms/config/dmasvrmal.ini<br>DMDCR_SEQNO   = 0 #记录当前节点序号<br>DMDCR_ASM_RESTART_INTERVAL = 0 #DMCSS 认定 DMASM 节点故障重启的时间间隔<br>DMDCR_ASM_STARTUP_CMD = /opt/dmdbms/bin/dmasmsvr  dcr_ini=/opt/dmdbms/config/dmdcr.ini<br><br>DMDCR_DB_RESTART_INTERVAL = 0 #DMCSS 认定 DMDSC 节点故障重启的时间间隔<br>DMDCR_DB_STARTUP_CMD = /opt/dmdbms/bin/dmserver  path=/opt/dmdbms/config/dsc0_config/dm.ini dcr_ini=/opt/dmdbms/config/dmdcr.ini<br></code></pre></td></tr></table></figure>
+
+
+
+<p>DSC2:</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs shell">DMDCR_PATH     = /dev/raw/raw1 <br>DMDCR_MAL_PATH = /opt/dmdbms/config/dmasvrmal.ini<br>DMDCR_SEQNO   = 1 #记录当前节点序号<br>DMDCR_ASM_RESTART_INTERVAL = 0 #DMCSS 认定 DMASM 节点故障重启的时间间隔<br>DMDCR_ASM_STARTUP_CMD = /opt/dmdbms/bin/dmasmsvr  dcr_ini=/opt/dmdbms/config/dmdcr.ini<br><br>DMDCR_DB_RESTART_INTERVAL = 0 #DMCSS 认定 DMDSC 节点故障重启的时间间隔<br>DMDCR_DB_STARTUP_CMD = /opt/dmdbms/bin/dmserver  path=/opt/dmdbms/config/dsc1_config/dm.ini dcr_ini=/opt/dmdbms/config/dmdcr.ini<br></code></pre></td></tr></table></figure>
+
+
+
+<h4 id="4-2-7-启动DMCSS（两台都启动，先启动的为控制节点）"><a href="#4-2-7-启动DMCSS（两台都启动，先启动的为控制节点）" class="headerlink" title="4.2.7 启动DMCSS（两台都启动，先启动的为控制节点）"></a>4.2.7 启动DMCSS（两台都启动，先启动的为控制节点）</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs shell">cd /opt/dmdbms/bin<br>./dmcss dcr_ini=/opt/dmdbms/config/dmdcr.ini<br></code></pre></td></tr></table></figure>
+
+<p>DSC1：</p>
+<p><img src="https://raw.githubusercontent.com/guodd012/typora-user-images/main/imgimage-20230306163208784.png" srcset="/img/loading.gif" lazyload alt="image-20230306163208784"></p>
+<p>DSC2：</p>
+<p><img src="https://raw.githubusercontent.com/guodd012/typora-user-images/main/imgimage-20230306163224477.png" srcset="/img/loading.gif" lazyload alt="image-20230306163224477"></p>
+<h4 id="4-2-8-启动ASM服务，新开窗口执行-（两台都要启动）"><a href="#4-2-8-启动ASM服务，新开窗口执行-（两台都要启动）" class="headerlink" title="4.2.8 启动ASM服务，新开窗口执行,（两台都要启动）"></a>4.2.8 启动ASM服务，新开窗口执行,（两台都要启动）</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs shell">cd /opt/dmdbms/bin<br>./dmasmsvr DCR_INI=/opt/dmdbms/config/dmdcr.ini<br></code></pre></td></tr></table></figure>
+
+<p>DSC1:</p>
+<p><img src="https://raw.githubusercontent.com/guodd012/typora-user-images/main/imgimage-20230324090231575.png" srcset="/img/loading.gif" lazyload alt="image-20230324090231575"></p>
+<p>DSC2:</p>
+<p><img src="https://raw.githubusercontent.com/guodd012/typora-user-images/main/imgimage-20230324090255802.png" srcset="/img/loading.gif" lazyload alt="image-20230324090255802"></p>
+<h4 id="4-2-9-使用-dmasmtool-工具创建-DMASM-磁盘组（DSC1创建）"><a href="#4-2-9-使用-dmasmtool-工具创建-DMASM-磁盘组（DSC1创建）" class="headerlink" title="4.2.9 使用 dmasmtool 工具创建 DMASM 磁盘组（DSC1创建）"></a>4.2.9 使用 dmasmtool 工具创建 DMASM 磁盘组（DSC1创建）</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs shell">./dmasmtool dcr_ini=/opt/dmdbms/config/dmdcr.ini<br>create diskgroup &#x27;DMLOG&#x27; asmdisk &#x27;/dev/raw/raw3&#x27;<br>create diskgroup &#x27;DMDATA&#x27; asmdisk &#x27;/dev/raw/raw4&#x27;<br></code></pre></td></tr></table></figure>
+
+<p><img src="https://raw.githubusercontent.com/guodd012/typora-user-images/main/imgimage-20230306164507780.png" srcset="/img/loading.gif" lazyload alt="image-20230306164507780"></p>
+<h4 id="4-2-10-使用-dminit-初始化-DB-实例（主控dsc1）"><a href="#4-2-10-使用-dminit-初始化-DB-实例（主控dsc1）" class="headerlink" title="4.2.10 使用 dminit 初始化 DB 实例（主控dsc1）"></a>4.2.10 使用 dminit 初始化 DB 实例（主控dsc1）</h4><h5 id="4-2-10-1-编辑配置文件"><a href="#4-2-10-1-编辑配置文件" class="headerlink" title="4.2.10.1 编辑配置文件"></a>4.2.10.1 编辑配置文件</h5><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">vim /opt/dmdbms/config/dminit.ini<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><code class="hljs shell">db_name = GRP_DSC #初始化数据库名称<br>system_path = +DMDATA/data #初始化数据库存放的路径<br>system        = +DMDATA/data/dsc/system.dbf<br>system_size       = 128<br>roll     = +DMDATA/data/dsc/roll.dbf<br>roll_size     = 128<br>main     = +DMDATA/data/dsc/main.dbf<br>main_size     = 128<br>ctl_path     = +DMDATA/data/dsc/dm.ctl<br>ctl_size     = 8<br>PAGE_SIZE  = 32<br>log_size     = 1024<br>dcr_path     = /dev/raw/raw1<br>dcr_seqno     = 0<br>auto_overwrite   = 1<br>[DSC0] <br>config_path = /opt/dmdbms/config/dsc0_config<br>port_num = 5236<br>mal_host = 192.168.1.35<br>mal_port = 9340<br>log_path = +DMLOG/log/dsc0_log01.log<br>log_path = +DMLOG/log/dsc0_log02.log<br>[DSC1] <br>config_path = /opt/dmdbms/config/dsc1_config<br>port_num = 5236<br>mal_host = 192.168.1.36<br>mal_port = 9341<br>log_path = +DMLOG/log/dsc1_log01.log<br>log_path = +DMLOG/log/dsc1_log02.log<br></code></pre></td></tr></table></figure>
+
+<h5 id="4-2-10-2-dminit-工具初始化数据库"><a href="#4-2-10-2-dminit-工具初始化数据库" class="headerlink" title="4.2.10.2 dminit 工具初始化数据库"></a>4.2.10.2 dminit 工具初始化数据库</h5><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">./dminit control=/opt/dmdbms/config/dminit.ini<br></code></pre></td></tr></table></figure>
+
+<p><img src="https://raw.githubusercontent.com/guodd012/typora-user-images/main/imgimage-20230326152554504.png" srcset="/img/loading.gif" lazyload alt="image-20230326152554504"></p>
+<h5 id="4-2-10-3-初始化完成后会在-init-控制文件配置的目录下生成-2-个实例的配置文件-dsc1和dsc2"><a href="#4-2-10-3-初始化完成后会在-init-控制文件配置的目录下生成-2-个实例的配置文件-dsc1和dsc2" class="headerlink" title="4.2.10.3 初始化完成后会在 init 控制文件配置的目录下生成 2 个实例的配置文件 dsc1和dsc2."></a>4.2.10.3 初始化完成后会在 init 控制文件配置的目录下生成 2 个实例的配置文件 dsc1和dsc2.</h5><p><img src="https://raw.githubusercontent.com/guodd012/typora-user-images/main/imgimage-20230306165457118.png" srcset="/img/loading.gif" lazyload alt="image-20230306165457118"></p>
+<h5 id="4-2-10-4-将-dsc2-目录复制到节点-2-上对应的目录下。"><a href="#4-2-10-4-将-dsc2-目录复制到节点-2-上对应的目录下。" class="headerlink" title="4.2.10.4 将 dsc2 目录复制到节点 2 上对应的目录下。"></a>4.2.10.4 将 dsc2 目录复制到节点 2 上对应的目录下。</h5><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">scp -r /opt/dmdbms/config/dsc1_config dmdba@192.168.1.36:/opt/dmdbms/config<br></code></pre></td></tr></table></figure>
+
+<h5 id="4-2-10-5-启动dmserver数据库服务（两台都要）"><a href="#4-2-10-5-启动dmserver数据库服务（两台都要）" class="headerlink" title="4.2.10.5 启动dmserver数据库服务（两台都要）"></a>4.2.10.5 启动dmserver数据库服务（两台都要）</h5><p>DSC1:</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">./dmserver /opt/dmdbms/config/dsc0_config/dm.ini dcr_ini=/opt/dmdbms/config/dmdcr.ini<br></code></pre></td></tr></table></figure>
+
+<p><img src="https://raw.githubusercontent.com/guodd012/typora-user-images/main/imgimage-20230326152714464.png" srcset="/img/loading.gif" lazyload alt="image-20230326152714464"></p>
+<p>DSC2:</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">./dmserver /opt/dmdbms/config/dsc1_config/dm.ini dcr_ini=/opt/dmdbms/config/dmdcr.ini<br></code></pre></td></tr></table></figure>
+
+<h5 id="4-2-10-6-观察日志，出现SYSTEM-IS-READY-和-EP-REAL-OPEN-表示数据库实例启动成功。"><a href="#4-2-10-6-观察日志，出现SYSTEM-IS-READY-和-EP-REAL-OPEN-表示数据库实例启动成功。" class="headerlink" title="4.2.10.6 观察日志，出现SYSTEM IS READY.和 EP REAL OPEN 表示数据库实例启动成功。"></a>4.2.10.6 观察日志，出现<code>SYSTEM IS READY.</code>和<code> EP REAL OPEN</code> 表示数据库实例启动成功。</h5><p><img src="https://raw.githubusercontent.com/guodd012/typora-user-images/main/imgimage-20230326153200899.png" srcset="/img/loading.gif" lazyload alt="image-20230326153200899"></p>
+<p>DSC1 CSS窗口 show命令查看</p>
+<p>查看<code>sys_status</code> 字段为 <code>OPEN</code> ，<code>vtd_status</code> 字段为 <code>WORKING</code>，<code>active</code> 字段为 <code>TRUE</code> 说明 db 服务正常。至此DSC数据共享集群搭建完成！！！</p>
+<p><img src="https://raw.githubusercontent.com/guodd012/typora-user-images/main/imgimage-20230326154034073.png" srcset="/img/loading.gif" lazyload alt="image-20230326154034073"></p>
+<h3 id="4-3-注册服务启动"><a href="#4-3-注册服务启动" class="headerlink" title="4.3 注册服务启动"></a>4.3 注册服务启动</h3><p>由于前台启动比较麻烦，不仅需要通过命令行启动还需要开启多个窗口，因此可将css、asm、db实例注册服务，以服务的方式启动。<br>root开机启动的方式：<br>2 个节点都需要注册，使用 root 用户执行，到数据库安装目录的 script&#x2F;root 目录。</p>
+<p>注册CSS服务：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs shell">CSS1:<br>	./dm_service_installer.sh -t dmcss -dcr_ini /opt/dmdbms/config/dmdcr.ini -p DMCSS1<br><br>CSS2:<br>	./dm_service_installer.sh -t dmcss -dcr_ini /opt/dmdbms/config/dmdcr.ini -p DMCSS2<br></code></pre></td></tr></table></figure>
+
+<p>注册ASM服务：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs shell">ASM1:<br>	./dm_service_installer.sh -t dmasmsvr -dcr_ini /opt/dmdbms/config/dmdcr.ini -y DmCSSServiceDMCSS1 -p DMASM1<br><br>ASM2:<br>	./dm_service_installer.sh -t dmasmsvr -dcr_ini /opt/dmdbms/config/dmdcr.ini -y DmCSSServiceDMCSS2 -p DMASM2<br></code></pre></td></tr></table></figure>
+
+<p>注册DSC服务：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs shell">DSC1:<br>	./dm_service_installer.sh -t dmserver -dm_ini /opt/dmdbms/config/dsc0_config/dm.ini  -dcr_ini /opt/dmdbms/config/dmdcr.ini -y DmASMSvrServiceDMASM1 -p DMSERVER1<br><br>DSC2:<br>	./dm_service_installer.sh -t dmserver -dm_ini /opt/dmdbms/config/dsc1_config/dm.ini  -dcr_ini /opt/dmdbms/config/dmdcr.ini -y DmASMSvrServiceDMASM2 -p DMSERVER2<br></code></pre></td></tr></table></figure>
+
+
+
+<p>系统服务清单：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs shell">DSC1:<br>	DmCSSServiceDMCSS1.service <br>	DmASMSvrServiceDMASM1.service <br>	DmServiceDMSERVER1.service <br><br>DSC2:<br>	DmCSSServiceDMCSS2.service <br>	DmASMSvrServiceDMASM2.service <br>	DmServiceDMSERVER2.service <br></code></pre></td></tr></table></figure>
+
+
+
+<h3 id="4-4-设置自动拉起功能"><a href="#4-4-设置自动拉起功能" class="headerlink" title="4.4 设置自动拉起功能"></a>4.4 设置自动拉起功能</h3><p>修改dmdcr.ini的DMDCR_ASM_RESTART_INTERVAL与DMDCR_DB_RESTART_INTERVAL为1。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs shell">DMDCR_ASM_RESTART_INTERVAL = 1  #自动拉起ASM<br>DMDCR_DB_RESTART_INTERVAL = 1   #自动拉起数据库实例<br></code></pre></td></tr></table></figure>
+
+
+
+<h3 id="4-5-配置监视器（其中一台即可）"><a href="#4-5-配置监视器（其中一台即可）" class="headerlink" title="4.5 配置监视器（其中一台即可）"></a>4.5 配置监视器（其中一台即可）</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">vim /opt/dmdbms/config/dmcssm.ini<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs shell">CSSM_LOG_PATH          = /opt/dmdbms/log/cssm_log/ #监视器日志文件存放路径<br>CSSM_LOG_FILE_SIZE     = 32 #每个日志文件最大 32M<br>CSSM_LOG_SPACE_LIMIT   = 0 #不限定日志文件总占用空间<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">和 dmdcr_cfg.ini 中的 DCR_OGUID 保持一致</span><br>CSSM_OGUID             = 63635<br><span class="hljs-meta prompt_">#</span><span class="language-bash">配置所有 CSS 的连接信息，和 dmdcr_cfg.ini 中 CSS 配置项的 DCR_EP_HOST 和 DCR_EP_PORT 保持一致</span><br>CSSM_CSS_IP            = 192.168.1.35:9341<br>CSSM_CSS_IP            = 192.168.1.36:9343<br></code></pre></td></tr></table></figure>
+
+<p>到bin目录下、启动监视器：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">./dmcssm  /opt/dmdbms/config/dmcssm.ini<br></code></pre></td></tr></table></figure>
+
+<h4 id="4-5-1-监视器说明："><a href="#4-5-1-监视器说明：" class="headerlink" title="4.5.1 监视器说明："></a>4.5.1 监视器说明：</h4><p>DMDSC 集群的运行情况可以通过 DMCSSM 监视器(Dameng Cluster Synchronization Services Monitor，DMCSSM)进行查看，也可以查询 DMDSC 相 关的动态视图获取更详细的信息。DMCSSM 监视器支持一些控制命令，可以用来启动、关闭 DMDSC 集群，还可以进行手动控制节点故障处理和节点重加入。</p>
+<h4 id="4-5-2-监视器基本命令"><a href="#4-5-2-监视器基本命令" class="headerlink" title="4.5.2 监视器基本命令"></a>4.5.2 监视器基本命令</h4><table>
+<thead>
+<tr>
+<th>命令</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>help</td>
+<td>显示帮助信息</td>
+</tr>
+<tr>
+<td>show [group_name]</td>
+<td>显示指定的组信息，如果没有指定group_name，则显示所有组信息</td>
+</tr>
+<tr>
+<td>show config</td>
+<td>显示dmdcr_cfg.ini的配置信息</td>
+</tr>
+<tr>
+<td>show monitor</td>
+<td>显示当前连接到主CSS的所有监视器信息</td>
+</tr>
+<tr>
+<td>set [group_name] auto restart on</td>
+<td>打开指定组的自动拉起功能(只修改 dmcss 内存值)</td>
+</tr>
+<tr>
+<td>set [group_name] auto restart off</td>
+<td>关闭指定组的自动拉起功能(只修改 dmcss 内存值)</td>
+</tr>
+<tr>
+<td>open force [group_name]</td>
+<td>强制open指定的ASM或DB组</td>
+</tr>
+<tr>
+<td>ep startup [group_name]</td>
+<td>启动指定的ASM或DB组</td>
+</tr>
+<tr>
+<td>ep stop [group_name]</td>
+<td>退出指定的ASM或DB组</td>
+</tr>
+<tr>
+<td>ep halt [group_name.ep_name]</td>
+<td>强制退出指定组中的指定节点</td>
+</tr>
+</tbody></table>
+<h3 id="4-6-应用系统连接DSC集群"><a href="#4-6-应用系统连接DSC集群" class="headerlink" title="4.6 应用系统连接DSC集群"></a>4.6 应用系统连接DSC集群</h3><p> 应用系统连接DMDSC集群，一般要求配置连接服务名，以实现故障自动重连。</p>
+<p>可以通过编辑 dm_svc.conf 文件，配置连接服务名。dm_svc.conf 配置文件在 DM 安装时生成，Windows 平台下位于%SystemRoot%\system32 目录，Linux 平台下位于 &#x2F;etc 目录。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs shell">TIML_ZONE=(480)<br>LANGUAGE=(cn)<br>DMDSC=(192.168.1.35:5236,192.168.1.36:5236)<br>[DMDSC]<br>LOGIN_MODE=(1)<br>SWITCH_TIME=2000<br>SWITCH_INTERVAL=10<br>TIME_ZONE=(480)<br>LANGUAGE=(cn)<br></code></pre></td></tr></table></figure>
+
+
+
+<h3 id="4-7-DMDSC-启动、关闭流程"><a href="#4-7-DMDSC-启动、关闭流程" class="headerlink" title="4.7 DMDSC 启动、关闭流程"></a>4.7 DMDSC 启动、关闭流程</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs shell">启动：<br>	启动DMDSC集群之前，必须先启动集群同步服务DMCSS，如果使用了DMASM文件系统，则DMASMSVR 服务也必须先启动。<br>	<br>关闭：<br>	关闭DMDSC集群环境时，应先关闭dmserver，再依次关闭DMASMSVR和DMCSS。<br></code></pre></td></tr></table></figure>
+
+
+
+
+
+<h1 id=""><a href="#" class="headerlink" title=""></a></h1>
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/Linux/" class="category-chain-item">Linux</a>
+  
+  
+    <span>></span>
+    
+  <a href="/categories/Linux/%E8%BE%BE%E6%A2%A6%E6%95%B0%E6%8D%AE%E5%BA%93/" class="category-chain-item">达梦数据库</a>
+  
+  
+
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/Linux/" class="print-no-link">#Linux</a>
+      
+        <a href="/tags/%E8%BE%BE%E6%A2%A6%E6%95%B0%E6%8D%AE%E5%BA%93/" class="print-no-link">#达梦数据库</a>
+      
+        <a href="/tags/dmdbms/" class="print-no-link">#dmdbms</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>达梦数据库DSC集群安装</div>
+      <div>https://guodd012.github.io/2024/01/15/达梦数据库DSC集群安装/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>guodd012</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2024年1月15日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2024/01/15/%E8%BE%BE%E6%A2%A6%E6%95%B0%E6%8D%AE%E5%BA%93%E5%8D%95%E6%9C%BA%E5%AE%89%E8%A3%85/" title="达梦数据库单机安装">
+                        <span class="hidden-mobile">达梦数据库单机安装</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  
+  
+    <article id="comments" lazyload>
+      
+
+    </article>
+  
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="busuanzi_container_site_pv" style="display: none">
+        总访问量 
+        <span id="busuanzi_value_site_pv"></span>
+         次
+      </span>
+    
+    
+      <span id="busuanzi_container_site_uv" style="display: none">
+        总访客数 
+        <span id="busuanzi_value_site_uv"></span>
+         人
+      </span>
+    
+    
+  
+</div>
+
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

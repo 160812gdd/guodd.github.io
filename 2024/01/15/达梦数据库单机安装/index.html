@@ -16,24 +16,45 @@
   <meta name="author" content="guodd012">
   <meta name="keywords" content="">
   
-    <meta name="description" content="Hexo博客基本用法">
+    <meta name="description" content="达梦数据库（单机部署）">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Hexo博客基本用法">
-<meta property="og:url" content="https://guodd012.github.io/2024/01/12/Hexo%E5%8D%9A%E5%AE%A2%E5%9F%BA%E6%9C%AC%E7%94%A8%E6%B3%95/index.html">
+<meta property="og:title" content="达梦数据库单机安装">
+<meta property="og:url" content="https://guodd012.github.io/2024/01/15/%E8%BE%BE%E6%A2%A6%E6%95%B0%E6%8D%AE%E5%BA%93%E5%8D%95%E6%9C%BA%E5%AE%89%E8%A3%85/index.html">
 <meta property="og:site_name" content="Guodd">
-<meta property="og:description" content="Hexo博客基本用法">
+<meta property="og:description" content="达梦数据库（单机部署）">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2024-01-12T07:10:16.000Z">
-<meta property="article:modified_time" content="2024-01-15T01:37:04.362Z">
+<meta property="og:image" content="https://raw.githubusercontent.com/guodd012/typora-user-images/main/imgimage-20220720115023790.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/guodd012/typora-user-images/main/imgimage-20220720115318940.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/guodd012/typora-user-images/main/imgimage-20220720115530354.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/guodd012/typora-user-images/main/imgimage-20220720115629168.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/guodd012/typora-user-images/main/imgimage-20220720115655095.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/guodd012/typora-user-images/main/imgimage-20220720115712270.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/guodd012/typora-user-images/main/imgimage-20220720115810559.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/guodd012/typora-user-images/main/imgimage-20220720115835380.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/guodd012/typora-user-images/main/imgimage-20220720115935413.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/guodd012/typora-user-images/main/imgimage-20220720120301569.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/guodd012/typora-user-images/main/imgimage-20220720123809684.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/guodd012/typora-user-images/main/imgimage-20220720123841926.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/guodd012/typora-user-images/main/imgimage-20220720123908346.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/guodd012/typora-user-images/main/imgimage-20220720123924187.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/guodd012/typora-user-images/main/imgimage-20220720123958599.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/guodd012/typora-user-images/main/imgimage-20220720124051657.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/guodd012/typora-user-images/main/imgimage-20220720124321619.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/guodd012/typora-user-images/main/imgimage-20220720124804328.png">
+<meta property="article:published_time" content="2024-01-15T01:53:20.000Z">
+<meta property="article:modified_time" content="2024-01-15T01:57:32.597Z">
 <meta property="article:author" content="guodd012">
-<meta property="article:tag" content="Hexo">
+<meta property="article:tag" content="Linux">
+<meta property="article:tag" content="达梦数据库">
+<meta property="article:tag" content="dmdbms">
 <meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/guodd012/typora-user-images/main/imgimage-20220720115023790.png">
   
   
     <meta name="referrer" content="no-referrer-when-downgrade">
   
   
-  <title>Hexo博客基本用法 - Guodd</title>
+  <title>达梦数据库单机安装 - Guodd</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -199,7 +220,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="Hexo博客基本用法"></span>
+            <span id="subtitle" data-typed-text="达梦数据库单机安装"></span>
           
         </div>
 
@@ -210,8 +231,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2024-01-12 15:10" pubdate>
-          2024年1月12日 下午
+        <time datetime="2024-01-15 09:53" pubdate>
+          2024年1月15日 上午
         </time>
       </span>
     
@@ -222,7 +243,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          357 字
+          390 字
         
       </span>
     
@@ -233,7 +254,7 @@
         
         
         
-          3 分钟
+          4 分钟
         
       </span>
     
@@ -270,75 +291,51 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">Hexo博客基本用法</h1>
+            <h1 id="seo-header">达梦数据库单机安装</h1>
             
             
               <div class="markdown-body">
                 
-                <h1 id="Hexo博客基本用法"><a href="#Hexo博客基本用法" class="headerlink" title="Hexo博客基本用法"></a>Hexo博客基本用法</h1><span id="more"></span>
+                <h1 id="达梦数据库（单机部署）"><a href="#达梦数据库（单机部署）" class="headerlink" title="达梦数据库（单机部署）"></a>达梦数据库（单机部署）</h1><span id="more"></span>
 
-<h3 id="1-新建文章"><a href="#1-新建文章" class="headerlink" title="1. 新建文章"></a>1. 新建文章</h3><p>在项目根目录下执行新建命令</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">hexo new [layout] &lt;title&gt;<br></code></pre></td></tr></table></figure>
+<h3 id="1-Windows系统安装达梦数据库"><a href="#1-Windows系统安装达梦数据库" class="headerlink" title="1 Windows系统安装达梦数据库"></a>1 Windows系统安装达梦数据库</h3><h4 id="1-1-运行安装程序"><a href="#1-1-运行安装程序" class="headerlink" title="1.1 运行安装程序"></a>1.1 运行安装程序</h4><p>将 DM 安装光盘放入光驱中，插入光盘后安装程序自动运行或直接双击 “setup.exe”安装程序后，程序将检测当前计算机系统是否已经安装其他版本 DM。如果存在其他版本 DM，将弹出提示对话框</p>
+<p><img src="https://raw.githubusercontent.com/guodd012/typora-user-images/main/imgimage-20220720115023790.png" srcset="/img/loading.gif" lazyload alt="image-20220720115023790"></p>
+<h4 id="1-2-语言与时区选择"><a href="#1-2-语言与时区选择" class="headerlink" title="1.2 语言与时区选择"></a>1.2 语言与时区选择</h4><p><img src="https://raw.githubusercontent.com/guodd012/typora-user-images/main/imgimage-20220720115318940.png" srcset="/img/loading.gif" lazyload alt="image-20220720115318940"></p>
+<p><img src="https://raw.githubusercontent.com/guodd012/typora-user-images/main/imgimage-20220720115530354.png" srcset="/img/loading.gif" lazyload alt="image-20220720115530354"></p>
+<p><img src="https://raw.githubusercontent.com/guodd012/typora-user-images/main/imgimage-20220720115629168.png" srcset="/img/loading.gif" lazyload alt="image-20220720115629168"></p>
+<p><img src="https://raw.githubusercontent.com/guodd012/typora-user-images/main/imgimage-20220720115655095.png" srcset="/img/loading.gif" lazyload alt="image-20220720115655095"></p>
+<p><img src="https://raw.githubusercontent.com/guodd012/typora-user-images/main/imgimage-20220720115712270.png" srcset="/img/loading.gif" lazyload alt="image-20220720115712270"></p>
+<p><img src="https://raw.githubusercontent.com/guodd012/typora-user-images/main/imgimage-20220720115810559.png" srcset="/img/loading.gif" lazyload alt="image-20220720115810559"></p>
+<p><img src="https://raw.githubusercontent.com/guodd012/typora-user-images/main/imgimage-20220720115835380.png" srcset="/img/loading.gif" lazyload alt="image-20220720115835380"></p>
+<p><img src="https://raw.githubusercontent.com/guodd012/typora-user-images/main/imgimage-20220720115935413.png" srcset="/img/loading.gif" lazyload alt="image-20220720115935413"></p>
+<p><img src="https://raw.githubusercontent.com/guodd012/typora-user-images/main/imgimage-20220720120301569.png" srcset="/img/loading.gif" lazyload alt="image-20220720120301569"></p>
+<h3 id="2-Linux系统安装达梦数据库"><a href="#2-Linux系统安装达梦数据库" class="headerlink" title="2 Linux系统安装达梦数据库"></a>2 Linux系统安装达梦数据库</h3><h4 id="2-1-图形化安装"><a href="#2-1-图形化安装" class="headerlink" title="2.1 图形化安装"></a>2.1 图形化安装</h4><p>用户双击 DMInstall.bin 或执行以下命令将运行 DM 的图形化安装。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">./DMInstall.bin<br></code></pre></td></tr></table></figure>
 
-<p>可以在命令中指定文章的布局（layout），默认为 <code>post</code>，可以通过修改 <code>_config.yml</code> 中的 <code>default_layout</code> 参数来指定默认布局</p>
-<h4 id="布局（Layout）"><a href="#布局（Layout）" class="headerlink" title="布局（Layout）"></a>布局（Layout）</h4><p>Hexo 有三种默认布局：<code>post</code>、<code>page</code> 和 <code>draft</code>。在创建这三种不同类型的文件时，它们将会被保存到不同的路径；而您自定义的其他布局和 <code>post</code> 相同，都将储存到 <code>source/_posts</code> 文件夹。</p>
-<table>
-<thead>
-<tr>
-<th align="left">布局</th>
-<th align="left">路径</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="left"><code>post</code></td>
-<td align="left"><code>source/_posts</code></td>
-</tr>
-<tr>
-<td align="left"><code>page</code></td>
-<td align="left"><code>source</code></td>
-</tr>
-<tr>
-<td align="left"><code>draft</code></td>
-<td align="left"><code>source/_drafts</code></td>
-</tr>
-</tbody></table>
-<p><strong>禁用布局</strong>：如果你不希望一篇文章（post&#x2F;page）使用主题处理，请在它的 <code>front-matter</code> 中设置 <code>layout: false</code>。</p>
-<h4 id="文件名称"><a href="#文件名称" class="headerlink" title="文件名称"></a>文件名称</h4><p>Hexo 默认以标题做为文件名称，但您可编辑 <code>new_post_name</code> 参数来改变默认的文件名称，举例来说，设为 <code>:year-:month-:day-:title.md</code> 可让您更方便的通过日期来管理文章。你可以使用以下占位符：</p>
-<table>
-<thead>
-<tr>
-<th align="left">变量</th>
-<th align="left">描述</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="left"><code>:title</code></td>
-<td align="left">标题（小写，空格将会被替换为短杠）</td>
-</tr>
-<tr>
-<td align="left"><code>:year</code></td>
-<td align="left">建立的年份，比如， <code>2015</code></td>
-</tr>
-<tr>
-<td align="left"><code>:month</code></td>
-<td align="left">建立的月份（有前导零），比如， <code>04</code></td>
-</tr>
-<tr>
-<td align="left"><code>:i_month</code></td>
-<td align="left">建立的月份（无前导零），比如， <code>4</code></td>
-</tr>
-<tr>
-<td align="left"><code>:day</code></td>
-<td align="left">建立的日期（有前导零），比如， <code>07</code></td>
-</tr>
-<tr>
-<td align="left"><code>:i_day</code></td>
-<td align="left">建立的日期（无前导零），比如， <code>7</code></td>
-</tr>
-</tbody></table>
-<h3 id="2-删除文章"><a href="#2-删除文章" class="headerlink" title="2. 删除文章"></a>2. 删除文章</h3><p>直接删除项目根目录<code>source/</code>文件夹下的文章源文件即可。</p>
-<h3 id="3-部署到GitHub"><a href="#3-部署到GitHub" class="headerlink" title="3. 部署到GitHub"></a>3. 部署到GitHub</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">hexo clean &amp; hexo g &amp; hexo d<br></code></pre></td></tr></table></figure>
+<p>安装步骤同 <code>4.1 Windows系统安装达梦数据库</code></p>
+<h4 id="2-2-命令行安装"><a href="#2-2-命令行安装" class="headerlink" title="2.2 命令行安装"></a>2.2 命令行安装</h4><p>在金航网环境中的 Linux操作系统上是没有图形化界面的，为了使 DM 能够在金航网环境中顺利安装，DM 提供了命令行的安装方式。在终端进入到安装程序所在文 件夹，执行以下命令进行命令行安装:</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">./DMInstall.bin -i<br></code></pre></td></tr></table></figure>
 
+<p><img src="https://raw.githubusercontent.com/guodd012/typora-user-images/main/imgimage-20220720123809684.png" srcset="/img/loading.gif" lazyload alt="image-20220720123809684"></p>
+<p><img src="https://raw.githubusercontent.com/guodd012/typora-user-images/main/imgimage-20220720123841926.png" srcset="/img/loading.gif" lazyload alt="image-20220720123841926"></p>
+<p><img src="https://raw.githubusercontent.com/guodd012/typora-user-images/main/imgimage-20220720123908346.png" srcset="/img/loading.gif" lazyload alt="image-20220720123908346"></p>
+<p><img src="https://raw.githubusercontent.com/guodd012/typora-user-images/main/imgimage-20220720123924187.png" srcset="/img/loading.gif" lazyload alt="image-20220720123924187"></p>
+<p><img src="https://raw.githubusercontent.com/guodd012/typora-user-images/main/imgimage-20220720123958599.png" srcset="/img/loading.gif" lazyload alt="image-20220720123958599"></p>
+<p><img src="https://raw.githubusercontent.com/guodd012/typora-user-images/main/imgimage-20220720124051657.png" srcset="/img/loading.gif" lazyload alt="image-20220720124051657"></p>
+<h4 id="2-3-初始化数据库实例"><a href="#2-3-初始化数据库实例" class="headerlink" title="2.3 初始化数据库实例"></a>2.3 初始化数据库实例</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs shell">cd /opt/dmdbms/bin/<br><br>./dminit PATH=/opt/dmdbms/data<br></code></pre></td></tr></table></figure>
+
+<p><img src="https://raw.githubusercontent.com/guodd012/typora-user-images/main/imgimage-20220720124321619.png" srcset="/img/loading.gif" lazyload alt="image-20220720124321619"></p>
+<h4 id="2-4-注册达梦数据库为系统服务"><a href="#2-4-注册达梦数据库为系统服务" class="headerlink" title="2.4 注册达梦数据库为系统服务"></a>2.4 注册达梦数据库为系统服务</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs shell">cd /opt/dmdbms/script/root<br><br>./dm_service_installer.sh -t dmserver -p DMSERVER -dm_ini /opt/dmdbms/data/DAMENG/dm.ini<br></code></pre></td></tr></table></figure>
+
+<p><img src="https://raw.githubusercontent.com/guodd012/typora-user-images/main/imgimage-20220720124804328.png" srcset="/img/loading.gif" lazyload alt="image-20220720124804328"></p>
+<h4 id="2-5-新建用户及表空间"><a href="#2-5-新建用户及表空间" class="headerlink" title="2.5 新建用户及表空间"></a>2.5 新建用户及表空间</h4><p>进入  <code>/opt/dmdbms/bin</code> 下 ，使用 <code>disql</code> 工具登陆达梦数据库；</p>
+<ul>
+<li><p>使用 <code>SYSDBA</code> 用户新建表空间</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">create tablespace &quot;AVIC&quot; datafile &#x27;/opt/dmdbms/bin/data/DAMENG/AVIC.DBF&#x27; size 256 CACHE = NORMAL;<br></code></pre></td></tr></table></figure>
+</li>
+<li><p>使用 <code>SYSDBA</code> 用户新建 <code>AVIC</code> 用户 </p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs shell">create user &quot;AVIC&quot; identified by &quot;12345678aA!&quot; <br>default tablespace &quot;AVIC&quot; <br>default index tablespace &quot;AVIC&quot;;<br><br>grant &quot;PUBLIC&quot;,&quot;SOI&quot;,&quot;VTI&quot;,&quot;SYS&quot; to &quot;AVIC&quot;;<br></code></pre></td></tr></table></figure></li>
+</ul>
 
                 
               </div>
@@ -357,8 +354,15 @@
     
       <span class="category-chain">
         
-  <a href="/categories/%E5%8D%9A%E5%AE%A2/" class="category-chain-item">博客</a>
+  <a href="/categories/Linux/" class="category-chain-item">Linux</a>
   
+  
+    <span>></span>
+    
+  <a href="/categories/Linux/%E8%BE%BE%E6%A2%A6%E6%95%B0%E6%8D%AE%E5%BA%93/" class="category-chain-item">达梦数据库</a>
+  
+  
+
   
 
       </span>
@@ -372,7 +376,11 @@
     <div class="post-meta">
       <i class="iconfont icon-tags"></i>
       
-        <a href="/tags/Hexo/" class="print-no-link">#Hexo</a>
+        <a href="/tags/Linux/" class="print-no-link">#Linux</a>
+      
+        <a href="/tags/%E8%BE%BE%E6%A2%A6%E6%95%B0%E6%8D%AE%E5%BA%93/" class="print-no-link">#达梦数据库</a>
+      
+        <a href="/tags/dmdbms/" class="print-no-link">#dmdbms</a>
       
     </div>
   
@@ -384,8 +392,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>Hexo博客基本用法</div>
-      <div>https://guodd012.github.io/2024/01/12/Hexo博客基本用法/</div>
+      <div>达梦数据库单机安装</div>
+      <div>https://guodd012.github.io/2024/01/15/达梦数据库单机安装/</div>
     </div>
     <div class="license-meta">
       
@@ -397,7 +405,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2024年1月12日</div>
+          <div>2024年1月15日</div>
         </div>
       
       
@@ -429,9 +437,9 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2024/01/15/%E8%BE%BE%E6%A2%A6%E6%95%B0%E6%8D%AE%E5%BA%93%E5%8D%95%E6%9C%BA%E5%AE%89%E8%A3%85/" title="达梦数据库单机安装">
+                      <a href="/2024/01/15/%E8%BE%BE%E6%A2%A6%E6%95%B0%E6%8D%AE%E5%BA%93DSC%E9%9B%86%E7%BE%A4%E5%AE%89%E8%A3%85/" title="达梦数据库DSC集群安装">
                         <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">达梦数据库单机安装</span>
+                        <span class="hidden-mobile">达梦数据库DSC集群安装</span>
                         <span class="visible-mobile">上一篇</span>
                       </a>
                     
@@ -439,8 +447,8 @@
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2024/01/12/Mac%E7%B3%BB%E7%BB%9F%E5%91%BD%E4%BB%A4%E8%A1%8C%E4%BF%AE%E6%94%B9dns/" title="Mac系统命令行修改dns">
-                        <span class="hidden-mobile">Mac系统命令行修改dns</span>
+                      <a href="/2024/01/12/Hexo%E5%8D%9A%E5%AE%A2%E5%9F%BA%E6%9C%AC%E7%94%A8%E6%B3%95/" title="Hexo博客基本用法">
+                        <span class="hidden-mobile">Hexo博客基本用法</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
