@@ -1,0 +1,811 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/1.png">
+  <link rel="icon" href="/img/1.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="guodd012">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="UOS配置多路径1. 多路径简介普通的电脑主机都是一个硬盘挂接到一个总线上，这里是一对一的关系。而到了有光纤组成的SAN环境，或者由iSCSI组成的IPSAN环境，由于主机和存储通过了光纤交换机或者多块网卡及IP来连接，这样的话，就构成了多对多的关系。也就是说，主机到存储可以有多条路径可以选择。主机到存储之间的IO由多条路径可以选择。每个主机到所对应的存储可以经过几条不同的路径，如果是同时使用的话">
+<meta property="og:type" content="article">
+<meta property="og:title" content="UOS配置多路径">
+<meta property="og:url" content="https://guodd012.github.io/2024/01/15/UOS%E9%85%8D%E7%BD%AE%E5%A4%9A%E8%B7%AF%E5%BE%84/index.html">
+<meta property="og:site_name" content="Guodd">
+<meta property="og:description" content="UOS配置多路径1. 多路径简介普通的电脑主机都是一个硬盘挂接到一个总线上，这里是一对一的关系。而到了有光纤组成的SAN环境，或者由iSCSI组成的IPSAN环境，由于主机和存储通过了光纤交换机或者多块网卡及IP来连接，这样的话，就构成了多对多的关系。也就是说，主机到存储可以有多条路径可以选择。主机到存储之间的IO由多条路径可以选择。每个主机到所对应的存储可以经过几条不同的路径，如果是同时使用的话">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2024-01-15T02:23:35.000Z">
+<meta property="article:modified_time" content="2024-01-15T02:37:45.669Z">
+<meta property="article:author" content="guodd012">
+<meta property="article:tag" content="Linux">
+<meta property="article:tag" content="多路径">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>UOS配置多路径 - Guodd</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"guodd012.github.io","root":"/","version":"1.9.7","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 7.0.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Guodd012</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/background-image.jpg') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="UOS配置多路径"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2024-01-15 10:23" pubdate>
+          2024年1月15日 上午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          3k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          26 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">UOS配置多路径</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="UOS配置多路径"><a href="#UOS配置多路径" class="headerlink" title="UOS配置多路径"></a>UOS配置多路径</h1><h1 id="1-多路径简介"><a href="#1-多路径简介" class="headerlink" title="1. 多路径简介"></a>1. <strong>多路径简介</strong></h1><p>普通的电脑主机都是一个硬盘挂接到一个总线上，这里是一对一的关系。而到了有光纤组成的SAN环境，或者由iSCSI组成的IPSAN环境，由于主机和存储通过了光纤交换机或者多块网卡及IP来连接，这样的话，就构成了多对多的关系。也就是说，主机到存储可以有多条路径可以选择。主机到存储之间的IO由多条路径可以选择。每个主机到所对应的存储可以经过几条不同的路径，如果是同时使用的话，I&#x2F;O流量如何分配？其中一条路径坏掉了，如何处理？还有在操作系统的角度来看，每条路径，操作系统会认为是一个实际存在的物理盘，但实际上只是通向同一个物理盘的不同路径而已，这样是在使用的时候，就给用户带来了困惑。多路径软件就是为了解决上面的问题应运而生的。</p>
+<h3 id="1-1-多路径功能"><a href="#1-1-多路径功能" class="headerlink" title="1.1 多路径功能"></a>1.1 多路径功能</h3><p>多路径的主要功能就是和存储设备一起配合实现如下功能：<br>1.故障的切换和恢复<br>2.IO流量的负载均衡<br>3.磁盘的虚拟化 </p>
+<p>由于多路径软件是需要和存储在一起配合使用的，不同的厂商基于不同的操作系统，都提供了不同的版本。并且有的厂商，软件和硬件也不是一起卖的，如果要使用多路径软件的话，可能还需要向厂商购买license才行。比如EMC公司基于linux下的多路径软件，就需要单独的购买license。但在RedHat和Debian等系统中都自带了免费的多路径软件包，并且可以免费使用，同时也是一个比较通用的包，可以支持大多数存储厂商的设备，即使是一些不是出名的厂商，通过对配置文件进行稍作修改，也是可以支持并运行的很好的。</p>
+<p>本文一下的部分将专门针对Linux下多路径软件的配置安装，以及一些结合实际的操作进行详细的介绍（以下操作均在UOS系统下进行）</p>
+<h1 id="2-多路径软件及依赖包。"><a href="#2-多路径软件及依赖包。" class="headerlink" title="2. 多路径软件及依赖包。"></a>2. <strong>多路径软件及依赖包。</strong></h1><h3 id="2-1-DM-Multipath-组件介绍"><a href="#2-1-DM-Multipath-组件介绍" class="headerlink" title="*2.1 DM-Multipath 组件介绍*"></a><em><strong>*2.1 DM-Multipath 组件介绍*</strong></em></h3><p><em><strong>*dm_multipath*</strong></em> ：内核模块 为路径和路径组群重新指定 I&#x2F;O 并支持出错冗余。<br><em><strong>*multipath-tools*</strong></em> ：程序 配置并启用设备映射器多路径<br><em><strong>*multipath*</strong></em> ：命令 列出并配置 multipath 设备。通常使用 &#x2F;etc&#x2F;rc.sysinit 启动，还可以在添加块设备时使用 udev 程序启动。<br><em><strong>*multipathd*</strong></em> ：守护进程 监视器路径，如果路径故障并返回，它可能会启动路径组群切换。可为多路径设备提供互动修改。对 &#x2F;etc&#x2F;multipath.conf 文件的任何修改都必须启动它。<br><em><strong>*kpartx*</strong></em> ： 命令为设备中的分区生成设备映射器设备。这个命令对带 DM-MP 的 DOS 分区是很必要的。kpartx 在其自身软件包中就存在，但 devicemapper-multipath 软件包要依赖它。</p>
+<h3 id="2-2-安装多路径软件"><a href="#2-2-安装多路径软件" class="headerlink" title="*2**.2* *安装多路径软件*"></a><em><strong>*2*</strong></em><em><strong>*.2*</strong></em> <em><strong>*安装多路径软件*</strong></em></h3><p>uos@uos-PC:~$  sudo apt install multipath-tools ###可同时安装依赖包</p>
+<h1 id="3-启动多路径服务，并设置开机自启。"><a href="#3-启动多路径服务，并设置开机自启。" class="headerlink" title="3. 启动多路径服务，并设置开机自启。"></a>3. <strong>启动多路径服务，并设置开机自启。</strong></h1><p>uos@uos-PC:~$  systemctl restart multipathd	###启动multipathd服务</p>
+<p>uos@uos-PC:~$  systemctl enable multipathd		 ###设置服务开机自启</p>
+<p>uos@uos-PC:~$  systemctl restart multipath-tools	##启动multipath-tools服务</p>
+<p>uos@uos-PC:~$  systemctl enable multipath-tools	 ##设置服务开机自启</p>
+<h1 id="4-查看多路径服务是否启动"><a href="#4-查看多路径服务是否启动" class="headerlink" title="4. 查看多路径服务是否启动"></a>4. <strong>查看多路径服务是否启动</strong></h1><p>uos@uos-PC:~$  systemctl list-unit-files | grep multipath</p>
+<p>multipath-tools-boot.service       masked  </p>
+<p>multipath-tools.service           enabled     ##已启动<br> multipathd.service              enabled     ##已启动<br>     multipathd.socket              static  </p>
+<p>###主要查看multipath-tools和multipahtd服务是否启动</p>
+<h1 id="5-查看硬盘wwid号"><a href="#5-查看硬盘wwid号" class="headerlink" title="5. 查看硬盘wwid号"></a>5. <strong>查看硬盘wwid号</strong></h1><p>uos@uos-PC:~$  ls  -l  &#x2F;dev&#x2F;disk&#x2F;by-id</p>
+<p>输入结果：</p>
+<p>lrwxrwxrwx 1 root root 13 9月  30 13:52 nvme-eui.8238fa6bf530001001b448b46d7ed1e -&gt; ..&#x2F;..&#x2F;sda</p>
+<p>lrwxrwxrwx 1 root root 15 9月  30 13:52 nvme-eui.8238fa6bf530001001b448b46d7ed1e-part1 -&gt; ..&#x2F;..&#x2F;sda1</p>
+<p>lrwxrwxrwx 1 root root 15 9月  30 13:52 nvme-eui.8238fa6bf530001001b448b46d7ed1e-part2 -&gt; ..&#x2F;..&#x2F;sda2</p>
+<p>## 先找到本地硬盘的wwid号（蓝色为硬盘名，红色为wwid号）</p>
+<h1 id="6-添加multipath-conf配置文件"><a href="#6-添加multipath-conf配置文件" class="headerlink" title="6. 添加multipath.conf配置文件"></a><strong>6.</strong> 添加multipath.conf配置文件</h1><p>需要修改配置文件&#x2F;etc&#x2F;multipath.conf，默认情况下是没有的。安装完软件会在:&#x2F;usr&#x2F;share&#x2F;doc&#x2F;multipath-tools&#x2F;examples 目录下生成 multipath.conf.synthetic 模板文件，可以将这个文件复制到&#x2F;etc目录下，并重命名为multipath.conf：（如没有multipath.conf.synthetic文件，无法拷贝时。可直接在&#x2F;etc 下编辑multipath.conf  文件，即可自动生成文件，可参考第7步）</p>
+<p>uos@uos-PC:~$ sudo  cp     &#x2F;usr&#x2F;share&#x2F;doc&#x2F;multipath-tools&#x2F;examples  &#x2F;etc&#x2F;multipath  #有模板文件时，直接拷贝。</p>
+<p>这个文件的内容都被注释掉了，可以取消与您环境相关的行的注释符。</p>
+<h1 id="7-修改-multipath-conf-配置文件："><a href="#7-修改-multipath-conf-配置文件：" class="headerlink" title="7. **修改 multipath.**conf 配置文件："></a>7. **修改 multipath.**<strong>conf</strong> <strong>配置文件：</strong></h1><p>uos@uos-PC:~$ sudo vim &#x2F;etc&#x2F;multipath.conf</p>
+<p>##编辑内容：</p>
+<p>defaults {</p>
+<p>user_friendly_names yes        #如果是集群环境yes最好改成no。</p>
+<p>​    path_grouping_policy multibus<br>}</p>
+<p>blacklist {  ###把本地磁盘加入黑名单，下面会解释<br>    wwid 8238fa6bf530001001b448b46d7ed1e    ###本地磁盘的wwid号</p>
+<p>}</p>
+<p>multipaths {</p>
+<p>multipath {</p>
+<p>wwid  33000000100000001 ##多路径识别到的wwid号</p>
+<p>alias   iscsidisk1  ##可设置多路径查看到的硬盘别名方便查看</p>
+<p>}</p>
+<p>}</p>
+<h1 id="8-配置完multipath-conf-文件后，重新加载文件"><a href="#8-配置完multipath-conf-文件后，重新加载文件" class="headerlink" title="8. 配置完multipath.conf 文件后，重新加载文件"></a>8. 配置完multipath.conf 文件后，重新加载文件</h1><p>uos@uos-PC:~$  sudo systemctl reload multipathd.service  </p>
+<h1 id="9-检查-multipath-模块是否正常加载"><a href="#9-检查-multipath-模块是否正常加载" class="headerlink" title="9. 检查 multipath 模块是否正常加载"></a>9. <strong>检查 multipath 模块是否正常加载</strong></h1><p>uos@uos-PC:~$ sudo lsmod | grep  dm_multipath     </p>
+<p>##输出结果：</p>
+<p>​		 dm_multipath    24576  2  dm_round_robin</p>
+<p>上述命令执行后，却没有输入结果时，需手动加载模块：</p>
+<p>uos@uos-PC:~$ sudo modprobe dm-multipath</p>
+<p>uos@uos-PC:~$ sudo modprobe dm-round-robin</p>
+<p>uos@uos-PC:~$ sudo systemctl	 restart multipathd</p>
+<p>uos@uos-PC:~$ sudo multipath –v2</p>
+<h1 id="10-查看显示多路径硬盘命令"><a href="#10-查看显示多路径硬盘命令" class="headerlink" title="10. 查看显示多路径硬盘命令"></a>10. <strong>查看显示多路径硬盘命令</strong></h1><p>uos@uos-PC:~$  sudo multipath -ll   ##会有信息显示</p>
+<p>如果没有信息显示，输入命令：</p>
+<p>uos@uos-PC:~$  sudo multipath &#x2F;dev&#x2F;sdc  ##这里的硬盘为连接多路径后，显示的硬盘盘符。</p>
+<p>uos@uos-PC:~$  sudo multipath -ll  ##可再一次查看</p>
+<h1 id="11-查看硬盘"><a href="#11-查看硬盘" class="headerlink" title="11.  查看硬盘"></a>11.  <strong>查看硬盘</strong></h1><p>uos@uos-PC:~$  sudo  fdisk  -l ##查看链接多路径后，硬盘盘符名称</p>
+<p>###输入结果：</p>
+<p>Disk &#x2F;dev&#x2F;sdb: 200 GiB, 214748364800 bytes, 419430400 sectors<br>Units: sectors of 1 * 512 &#x3D; 512 bytes<br>Sector size (logical&#x2F;physical): 512 bytes &#x2F; 512 bytes<br>I&#x2F;O size (minimum&#x2F;optimal): 512 bytes &#x2F; 512 bytes</p>
+<p>Disk &#x2F;dev&#x2F;sdc: 200 GiB, 214748364800 bytes, 419430400 sectors<br>Units: sectors of 1 * 512 &#x3D; 512 bytes<br>Sector size (logical&#x2F;physical): 512 bytes &#x2F; 512 bytes<br>I&#x2F;O size (minimum&#x2F;optimal): 512 bytes &#x2F; 512 bytes</p>
+<p>Disk &#x2F;dev&#x2F;mapper&#x2F;mpatha: 200 GiB, 214748364800 bytes, 419430400 sectors<br>Units: sectors of 1 * 512 &#x3D; 512 bytes<br>Sector size (logical&#x2F;physical): 512 bytes &#x2F; 512 bytes<br>I&#x2F;O size (minimum&#x2F;optimal): 512 bytes &#x2F; 512 bytes</p>
+<p>###可看到此聚合后的硬盘盘符为：&#x2F;dev&#x2F;mapper&#x2F;mpatha</p>
+<h1 id="12-对聚合后的硬盘操作"><a href="#12-对聚合后的硬盘操作" class="headerlink" title="12.  对聚合后的硬盘操作"></a>12.  <strong>对聚合后的硬盘操作</strong></h1><p>uos@uos-PC:~$ sudo fdisk &#x2F;dev&#x2F;mapper&#x2F;mpatha  ##将聚合后的硬盘分区，当硬盘大于2T时，需要使用parted 命令进行分区</p>
+<p>uos@uos-PC:~$ sudo mkfs.ext4 &#x2F;dev&#x2F;mapper&#x2F;mpatha1  ##这里是格式化为ext4类型，根据实际分区的类型，进行格式化</p>
+<h1 id="13-创建挂载点，并进行挂载。"><a href="#13-创建挂载点，并进行挂载。" class="headerlink" title="13. 创建挂载点，并进行挂载。"></a>13. <strong>创建挂载点，并进行挂载。</strong></h1><p>uos@uos-PC:~$  sudo mkdir &#x2F;test  ##创建挂载点，这里为test</p>
+<p>uos@uos-PC:~$  sudo  mount  &#x2F;dev&#x2F;mapper&#x2F;mpatha1 &#x2F;test ##将硬盘挂载</p>
+<h1 id="14-查看硬盘uuid"><a href="#14-查看硬盘uuid" class="headerlink" title="14. 查看硬盘uuid"></a>14. <strong>查看硬盘uuid</strong></h1><p>uos@uos-PC:~$ blkid  ##查看硬盘uuid号</p>
+<p>输出结果：</p>
+<p>&#x2F;dev&#x2F;mapper&#x2F;mpatha1:  UUID&#x3D;”4f927dbc-446e-49eb-939f-bc7790b823a4” TYPE&#x3D;”ext4” </p>
+<p>##红色字体为uuid号</p>
+<h1 id="15-添加硬盘开机自动挂载"><a href="#15-添加硬盘开机自动挂载" class="headerlink" title="15.  添加硬盘开机自动挂载"></a>15.  <strong>添加硬盘开机自动挂载</strong></h1><p>uos@uos-PC:~$  sudo vim &#x2F;etc&#x2F;fstab  ##修改配置文件，使此硬盘随服务重启自动挂载</p>
+<p>添加内容为（可参考其他硬盘挂载方式）：</p>
+<p>UUID&#x3D;”4f927dbc-446e-49eb-939f-bc7790b823a4” 	&#x2F;test	ext4	defaults 	0 0</p>
+<p>至此，多路径配置成功。</p>
+<p> 附上我目前再用的mulitpath.conf </p>
+<p>[点此下载]: <a target="_blank" rel="noopener" href="https://github.com/guodd012/typora-user-images/blob/main/static/multipath.conf">https://github.com/guodd012/typora-user-images/blob/main/static/multipath.conf</a>	“asdfasdfa”</p>
+<p>————————————————————————————</p>
+<p><em><strong>*补充说明：*</strong></em></p>
+<p>\1. 对修改配置文件multipath.conf添加下面的内容说明</p>
+<p>-—————————————————————————————-</p>
+<p><strong>1.1</strong> <em><strong>*user_friendly_names yes*</strong></em></p>
+<p>每个多路径设备都有一个全球识别符（WWID），它是一个全球唯一的无法更改的号码。默认情况下会将</p>
+<p>多路径设备的名称设定为它的 WWID。另外，您还可以在多路径配置文件中设置。</p>
+<p><strong>1.2</strong> <em><strong>*user_friendly_names*</strong></em> </p>
+<p>选项，该选项可将别名设为格式为 mpathn 的节点唯一名称</p>
+<p>当在 DM-Multipath中添加新设备时，这些新设备会位于 &#x2F;dev 目录的两个不同位置：&#x2F;dev&#x2F;mapper&#x2F;mpathn 和 &#x2F;dev&#x2F;dm-n。</p>
+<p>&#x2F;dev&#x2F;mapper 中的设备是在引导过程中生成的。可使用这些设备访问多路径设备，例如在生成逻辑卷时。</p>
+<p>所有 &#x2F;dev&#x2F;dm-n 格式的设备都只能是作为内部使用，请不要使用它们。</p>
+<p>1.2.1 在集群中保持多路径设备名称一致(重点)</p>
+<p>当将 user_friendly_names 配置选项设为 yes 时，该多路径设备的名称对于节点来说是唯一的，但不保证对使用多路径设备的所有节点都一致。同样，如果您为 multipath.conf 配置文件的 multipaths部分中的设备设定 alias 选项，该名称不会自动在集群的所有节点中保持一致。如果您使用 LVM 在多路径设备中创建逻辑设备，这不应是问题。但如果您需要将您的多路径设备名称在集群中的每个节点上都保持一致，请不要将 user_friendly_names 选项设定为 yes，且不要为那些设备配置别名。默认情况下，如果您不将 user_friendly_names 设定为 yes，或者为某个设备配置别名，则设备名称将是该设备的 WWID，它是不会变的。</p>
+<p>1.2.2 集群的所有节点中都一致，您可按照以下步骤操作：</p>
+<p>1）. 在一台机器中设定所有多路径设备。</p>
+<p>2）. 运行以下命令在其他机器中禁用所有 multipath 设备：</p>
+<p># systemctl stop multipath-tools.service</p>
+<p># multipath -F</p>
+<p>3）. 将第一台机器中的 &#x2F;etc&#x2F;multipath&#x2F;bindings 文件复制到集群中的其它所有机器中。</p>
+<p>4）. 使用以下命令在集群的其他机器中重新 multipathd 守护进程：</p>
+<p>设备映射多路径</p>
+<p># systemctl start multipath-tools.service</p>
+<p>如果您添加新设备，您将需要重复这个过程。</p>
+<p>5）. 如果为某个设备配置别名以便在集群的节点中使其保持一致，您应确定&#x2F;etc&#x2F;multipath.conf 文件对于集群中的每个节点都是一样的，步骤如下：</p>
+<p>l 为机器 multipath.conf 文件中的多路基功能设备配置别名。</p>
+<p>l 运行以下命令在其他机器中禁用所有 multipath 设备：</p>
+<p># systemctl stop multipath-tools.service</p>
+<p># multipath -F</p>
+<p>l 将第一台机器中的 &#x2F;etc&#x2F;multipath.conf 文件复制到集群中的其它所有机器中。</p>
+<p>l 使用以下命令在集群的其他机器中重新 multipathd 守护进程：</p>
+<p># systemctl start multipath-tools.service</p>
+<p>当您添加新设备时，您将需要重复这个过程。</p>
+<p>-———————————————————————————————-</p>
+<p><strong>1.3</strong> <em><strong>*path_grouping_policy  multibus*</strong></em></p>
+<p>DM-Multipath 可在主动&#x2F;被动配置中提供出错冗余。在主动&#x2F;被动配置中，只有一半的路径在每次I&#x2F;O 时都使用。如果 I&#x2F;O 路径的任意元素（电缆、交换机或者控制器）出现故障，就会将 DMMultipath 切换到备用路径。</p>
+<p>也可将 DM-Multipath 配置为主动&#x2F;主动模式，其中将 I&#x2F;O 以轮叫调度算法方式分布到所有路径中。</p>
+<p>在有些配置中，DM-Multipath 可在 I&#x2F;O 路径中检测负载并动态重新平衡负载。</p>
+<p>默认配置path_grouping_policy  failover  主备模式</p>
+<p>配置成  path_grouping_policy  multibus  负载模式</p>
+<p>\2. 生成多路径设备时忽略本地磁盘</p>
+<p>有些机器的内部磁盘有本地SCSI卡。DM-Multipath不推荐用于这些设备。以下过程说明如何在配置多路径时修改多路径配置文件以忽略本地磁盘。</p>
+<p>确定哪些磁盘是内部磁盘，并将它们标记为要列入黑名单的磁盘。一般情况下，&#x2F; dev &#x2F; sda是内部磁盘。</p>
+<p>为了防止设备映射器在其多路径映射中映射&#x2F; dev &#x2F; sda，请编辑&#x2F;etc&#x2F;multipath.conf文件的黑名单部分以包含此设备。</p>
+<p>虽然您可以使用devnode类型将sda设备列入黑名单，但这不是安全的过程，因为&#x2F; dev &#x2F; sda不能保证在重新启动时相同。</p>
+<p>要将单个设备列入黑名单，您可以使用该设备的WWID将其列入黑名单。</p>
+<p>\3. 常用命令</p>
+<p># multipath -ll   #显示现有多路径配置</p>
+<p># multipath -F    #删除全部路径  </p>
+<p># multipath -v2   #格式化路径，格式化后会生成新路径</p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/Linux/" class="category-chain-item">Linux</a>
+  
+  
+    <span>></span>
+    
+  <a href="/categories/Linux/UOS/" class="category-chain-item">UOS</a>
+  
+  
+
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/Linux/" class="print-no-link">#Linux</a>
+      
+        <a href="/tags/%E5%A4%9A%E8%B7%AF%E5%BE%84/" class="print-no-link">#多路径</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>UOS配置多路径</div>
+      <div>https://guodd012.github.io/2024/01/15/UOS配置多路径/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>guodd012</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2024年1月15日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2024/01/15/Markdown%E5%9F%BA%E6%9C%AC%E8%AF%AD%E6%B3%95/" title="Markdown基本语法">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Markdown基本语法</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2024/01/15/UOS%E6%8C%82%E8%BD%BD%E8%A3%B8%E5%AD%98%E5%82%A8/" title="UOS挂载裸存储">
+                        <span class="hidden-mobile">UOS挂载裸存储</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  
+  
+    <article id="comments" lazyload>
+      
+
+    </article>
+  
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="busuanzi_container_site_pv" style="display: none">
+        总访问量 
+        <span id="busuanzi_value_site_pv"></span>
+         次
+      </span>
+    
+    
+      <span id="busuanzi_container_site_uv" style="display: none">
+        总访客数 
+        <span id="busuanzi_value_site_uv"></span>
+         人
+      </span>
+    
+    
+  
+</div>
+
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
