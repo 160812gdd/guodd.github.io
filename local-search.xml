@@ -4,6 +4,35 @@
   
   
   <entry>
+    <title>UOS挂载裸存储</title>
+    <link href="/2024/01/15/UOS%E6%8C%82%E8%BD%BD%E8%A3%B8%E5%AD%98%E5%82%A8/"/>
+    <url>/2024/01/15/UOS%E6%8C%82%E8%BD%BD%E8%A3%B8%E5%AD%98%E5%82%A8/</url>
+    
+    <content type="html"><![CDATA[<h1 id="UOS挂载裸存储设备"><a href="#UOS挂载裸存储设备" class="headerlink" title="UOS挂载裸存储设备"></a>UOS挂载裸存储设备</h1><span id="more"></span><p><strong>一、</strong><em><strong>*检查系统是否已经启用了raw模块*</strong></em></p><p>lsmod |grep raw</p><p>如果系统没有启用raw模块!</p><p><strong>二、</strong><em><strong>*设置系统自动启用raw*</strong></em></p><p>root@node1:~# lsmod |grep raw </p><p>root@node1:~# cat &#x2F;etc&#x2F;mod #查看添加内容</p><p>modprobe.d&#x2F;   modules     modules-load.d&#x2F; </p><p>root@uos-PC:~&#x2F;Desktop# cat &#x2F;etc&#x2F;modules</p><p># &#x2F;etc&#x2F;modules: kernel modules to load at boot time.</p><p>#</p><p># This file contains the names of kernel modules that should be loaded</p><p># at boot time, one per line. Lines beginning with “#” are ignored.</p><p>raw</p><p>三、 <em><strong>*reboot重启系统, 再次检查是是否已经启用raw模块*</strong></em></p><p>root@uos-PC:~&#x2F;Desktop# lsmod|grep raw</p><p>raw           12498  0</p><p><strong>四、</strong><em><strong>*创建卷组*</strong></em></p><p>1．查看磁盘情况，创建分区</p><p>root@node1:~# fdisk -l</p><p>root@node1:~# fdisk &#x2F;dev&#x2F;sdb #执行顺序是 n、p、回车、回车、p、w</p><p>Welcome to fdisk (util-linux 2.33.1).</p><p>Changes will remain in memory only, until you decide to write them.</p><p>Be careful before using the write command.</p><p>Command (m for help): n</p><p>Partition type</p><p>  p  primary (0 primary, 0 extended, 4 free)</p><p>  e  extended (container for logical partitions)</p><p>Select (default p): p</p><p>Partition number (1-4, default 1): </p><p>First sector (2048-20971519, default 2048): </p><p>Last sector, +&#x2F;-sectors or +&#x2F;-size{K,M,G,T,P} (2048-20971519, default 20971519): </p><p>Created a new partition 1 of type ‘Linux’ and of size 10 GiB.</p><p>Command (m for help): p</p><p>Disk &#x2F;dev&#x2F;sdb: 10 GiB, 10737418240 bytes, 20971520 sectors</p><p>Disk model: VMware Virtual S</p><p>Units: sectors of 1 * 512 &#x3D; 512 bytes</p><p>Sector size (logical&#x2F;physical): 512 bytes &#x2F; 512 bytes</p><p>I&#x2F;O size (minimum&#x2F;optimal): 512 bytes &#x2F; 512 bytes</p><p>Disklabel type: dos</p><p>Disk identifier: 0x76d104b4</p><p>Device   Boot Start    End  Sectors Size Id Type</p><p>&#x2F;dev&#x2F;sdb1     2048 20971519 20969472  10G 83 Linux</p><p>Command (m for help): w</p><p>The partition table has been altered.</p><p>Calling ioctl() to re-read partition table.</p><p>Syncing disks.</p><p>2．创建PV卷</p><p>  root@node1:~# pvcreate &#x2F;dev&#x2F;sdb1 </p><p> Physical volume “&#x2F;dev&#x2F;sdb1” successfully created.</p><p>3．创建VG卷</p><p>root@node1:~# vgcreate vgraw &#x2F;dev&#x2F;sdb1 </p><p> Volume group “vgraw” successfully created</p><p>4．创建LV卷</p><p>（1）查看VG卷大小root@node1:~# vgdisplay</p><p>（2）创建LV卷</p><p>root@node1:~# lvcreate -L 9.99G -n lvraw vgraw </p><p> Rounding up size to full physical extent 9.99 GiB</p><p> Logical volume “lvraw” created.</p><p>（3）root@node1:~# lvdisplay #查看lv空间大小</p><p><strong>五、</strong><em><strong>*将原设备映射到新建逻辑卷（分区）*</strong></em></p><p>root@node1:~# raw &#x2F;dev&#x2F;raw&#x2F;raw1  &#x2F;dev&#x2F;vgraw&#x2F;lvraw</p><p>&#x2F;dev&#x2F;raw&#x2F;raw1:  bound to major 253, minor 0</p><p><strong>六、</strong><em><strong>*检查是否映射成功*</strong></em></p><p>root@node1:~# raw -qa</p><p>&#x2F;dev&#x2F;raw&#x2F;raw1:  bound to major 253, minor 0</p><p><strong>七、</strong><em><strong>*加入开机自启*</strong></em></p><p>1．编辑文件</p><p>root@node1:~# vim &#x2F;etc&#x2F;rc.local </p><p>#第一句：#！&#x2F;bin&#x2F;sh -e</p><p>#中间执行语句</p><p>#最后结尾： exit 0  例如：</p><p><img src="https://raw.githubusercontent.com/guodd012/typora-user-images/main/imgwps1.jpg" alt="img"> </p><p>2．给权限</p><p>root@node1:~# chmod +X &#x2F;etc&#x2F;rc.local </p><p>3．创建软连接</p><p>root@uos-PC:~&#x2F;Desktop# ln -s &#x2F;lib&#x2F;systemd&#x2F;system&#x2F;rc.local.service &#x2F;etc&#x2F;systemd&#x2F;system&#x2F;</p><p><strong>八、</strong><em><strong>*重启电脑查看raw下是否挂载磁盘*</strong></em></p><p>root@node1:~# raw -qa</p><p>&#x2F;dev&#x2F;raw&#x2F;raw1:  bound to major 253, minor 0</p>]]></content>
+    
+    
+    <categories>
+      
+      <category>Linux</category>
+      
+      <category>UOS</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>Linux</tag>
+      
+      <tag>裸存储</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>达梦数据库DSC集群安装</title>
     <link href="/2024/01/15/%E8%BE%BE%E6%A2%A6%E6%95%B0%E6%8D%AE%E5%BA%93DSC%E9%9B%86%E7%BE%A4%E5%AE%89%E8%A3%85/"/>
     <url>/2024/01/15/%E8%BE%BE%E6%A2%A6%E6%95%B0%E6%8D%AE%E5%BA%93DSC%E9%9B%86%E7%BE%A4%E5%AE%89%E8%A3%85/</url>
